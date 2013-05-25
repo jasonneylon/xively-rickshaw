@@ -1,32 +1,62 @@
-<!doctype>
-<head>
-  <link type="text/css" rel="stylesheet" href="css/graph.css">
-  <link type="text/css" rel="stylesheet" href="css/detail.css">
-  <link type="text/css" rel="stylesheet" href="css/legend.css">
-  <link type="text/css" rel="stylesheet" href="css/lines.css">
+<!DOCTYPE html>
+<html>
 
-  <script src="vendor/d3.min.js"></script>
-  <script src="vendor/d3.layout.min.js"></script>
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Xively-rickshaw : Some example time series graphs generated from Xively using Rickshaw" />
 
-  <script src="rickshaw.min.js"></script>
-  <script src="vendor/moment.min.js"></script>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.15/jquery-ui.min.js"></script>
-  <script src="http://d23cj0cdvyoxg0.cloudfront.net/xivelyjs-1.0.3.min.js"></script>  
-  <title>Current cost energy usage</title>
-</head>
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+    <link type="text/css" rel="stylesheet" href="css/graph.css">
+    <link type="text/css" rel="stylesheet" href="css/detail.css">
+    <link type="text/css" rel="stylesheet" href="css/legend.css">
+    <link type="text/css" rel="stylesheet" href="css/lines.css">
 
-<body>
-<h1>Current cost energy usage</h1>
+    <script src="vendor/d3.min.js"></script>
+    <script src="vendor/d3.layout.min.js"></script>
 
-<div id="chart_container">
-    <div id="chart"></div>
-    <div id="legend_container">
-      <div id="smoother" title="Smoothing"></div>
-      <div id="legend"></div>
+    <script src="rickshaw.min.js"></script>
+    <script src="vendor/moment.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.15/jquery-ui.min.js"></script>
+    <script src="http://d23cj0cdvyoxg0.cloudfront.net/xivelyjs-1.0.3.min.js"></script>  
+
+    <title>Current cost energy usage</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">Current cost electricity usage</h1>
+h2>
+        </header>
     </div>
-    <div id="slider"></div>
-</div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner" style="height: 400px">
+      <div id="chart_container" >
+          <div id="chart"></div>
+          <div id="legend_container">
+            <div id="smoother" title="Smoothing"></div>
+            <div id="legend"></div>
+          </div>
+          <div id="slider"></div>
+      </div>
+
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Xively-rickshaw maintained by <a href="https://github.com/jasonneylon">jasonneylon</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
 <script>
 
 // Set your API key first  
@@ -71,7 +101,7 @@ function drawGraph(data, unit) {
   var graph = new Rickshaw.Graph( {
     element: document.querySelector("#chart"),
     width: 800,
-    height: 600,
+    height: 400,
     renderer: 'line',
     series: [
       {
@@ -106,4 +136,6 @@ function drawGraph(data, unit) {
 }
 </script>
 
+
+</body>
 </body>
