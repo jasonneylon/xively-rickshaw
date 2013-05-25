@@ -1,0 +1,109 @@
+<!doctype>
+<head>
+  <link type="text/css" rel="stylesheet" href="css/graph.css">
+  <link type="text/css" rel="stylesheet" href="css/detail.css">
+  <link type="text/css" rel="stylesheet" href="css/legend.css">
+  <link type="text/css" rel="stylesheet" href="css/lines.css">
+
+  <script src="vendor/d3.min.js"></script>
+  <script src="vendor/d3.layout.min.js"></script>
+
+  <script src="rickshaw.min.js"></script>
+  <script src="vendor/moment.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.15/jquery-ui.min.js"></script>
+  <script src="http://d23cj0cdvyoxg0.cloudfront.net/xivelyjs-1.0.3.min.js"></script>  
+  <title>Current cost energy usage</title>
+</head>
+
+<body>
+<h1>Current cost energy usage</h1>
+
+<div id="chart_container">
+    <div id="chart"></div>
+    <div id="legend_container">
+      <div id="smoother" title="Smoothing"></div>
+      <div id="legend"></div>
+    </div>
+    <div id="slider"></div>
+</div>
+<script>
+
+// Set your API key first  
+xively.setKey( "3teYjd92Dsg_fNHKuQ2CjwF3fjySAKx4clhoQTlSdW9QTT0g" );  
+
+// Get feed content  
+// xively.feed.get( "58224", function( data ) {  
+//   console.log( data.title ); // Logs the feed title  
+// });  
+
+// // Get realtime updates on a datastream  
+// xively.datastream.subscribe( "58224", "1", function( event, data ) {  
+//   console.log( data.current_value ); // Logs value changes in realtime  
+// });  
+
+// xively.datapoint.get( "58224", "1", new Date(new Date().getTime() - 120*60000).getTime(), function( data ) {  console.log( data ); });  
+
+
+// datapoints: Array[60]
+// 0: Object
+// at: "2013-05-24T01:13:16.840547Z"
+// value: "3201"
+
+xively.datastream.history( "58224", "1", { start: "2013-05-24T00:00:00Z", end: "2013-05-25T00:00:00Z", interval:60, limit: 1000
+}, loadData);  
+
+function loadData(data) {  
+  var unit = data.unit.label;
+  // var datapoints = data.datapoints.map(function(x) { console.log(x); return x.value; });
+  var series = []
+  for (var i=0; i < data.datapoints.length; i++ ) {
+    var date = moment(data.datapoints[i].at.substr(0, 19), "YYYY-MM-DDTHH:mm:ss.SSS");
+    var value = parseInt(data.datapoints[i].value);
+    series[i] = {x: date.unix(), y: value};
+  }
+  drawGraph(series, unit);
+}
+
+// start: "2013-01-01T14:00:00Z", end: "2013-01-01T16:00:00Z", interval:900
+
+function drawGraph(data, unit) {
+  var graph = new Rickshaw.Graph( {
+    element: document.querySelector("#chart"),
+    width: 800,
+    height: 600,
+    renderer: 'line',
+    series: [
+      {
+        data: data,
+        color: '#6060c0',
+        name: unit
+      }
+    ]
+  } );
+  graph.render();
+
+  var hoverDetail = new Rickshaw.Graph.HoverDetail( {
+    graph: graph
+  } );
+
+  var legend = new Rickshaw.Graph.Legend( {
+    graph: graph,
+    element: document.getElementById('legend')
+  } );
+
+  var shelving = new Rickshaw.Graph.Behavior.Series.Toggle( {
+    graph: graph,
+    legend: legend
+  } );
+
+
+  var axes = new Rickshaw.Graph.Axis.Time( {
+    graph: graph
+  });
+  axes.render();
+
+}
+</script>
+
+</body>
