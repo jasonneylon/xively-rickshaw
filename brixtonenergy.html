@@ -62,7 +62,7 @@ h2>
 // Set your API key first  
 xively.setKey( "QjgNPVyfrL8mq0ulvTk69cfkY0RPTVE8SWEA6Jr7SnjdfOBY" );  
 
-var startOfYesterday = moment().subtract("day", 1).add("hour", 5).startOf('day');
+var startOfYesterday = moment().subtract("day", 1).startOf('day');
 var endOfYesterday = moment().subtract("hour", 3).startOf('day');
 
 console.log(startOfYesterday);
@@ -71,8 +71,8 @@ console.log(endOfYesterday);
 var query = { 
   start: startOfYesterday.toJSON(), 
   end: endOfYesterday.toJSON(), 
-  interval: 60, 
-  limit: 1000 
+  interval: 120, 
+  limit: 1000,
 };
 
 xively.datastream.history( "62472", "power", query, loadData);  
@@ -80,7 +80,7 @@ xively.datastream.history( "62472", "power", query, loadData);
 function loadData(data) {  
   var unit = data.unit.label;
   var series = [];
-  var filtedData = data.datapoints.filter(function(x) { return (x.value < 1000); });
+  var filtedData = data.datapoints;
   for (var i=0; i < filtedData.length; i++ ) {
     var date = moment(filtedData[i].at);
     var value = parseInt(filtedData[i].value);
