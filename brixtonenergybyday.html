@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Xively-rickshaw : Some example time series graphs generated from Xively using Rickshaw" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+    <link type="text/css" rel="stylesheet" href="css/graph.css">
+    <link type="text/css" rel="stylesheet" href="css/detail.css">
+    <link type="text/css" rel="stylesheet" href="css/legend.css">
+    <link type="text/css" rel="stylesheet" href="css/lines.css">
+
+    <script src="vendor/d3.min.js"></script>
+    <script src="vendor/d3.layout.min.js"></script>
+
+    <script src="rickshaw.min.js"></script>
+    <script src="vendor/moment.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.15/jquery-ui.min.js"></script>
+    <script src="http://d23cj0cdvyoxg0.cloudfront.net/xivelyjs-1.0.3.min.js"></script>  
+
+    <title>Brixton Energy Solar 1</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">Brixton Energy Solar 1</h1>
+h2>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner" style="height: 500px">
+      <div id="chart_container" >
+          <div id="chart"></div>
+          <div id="legend_container">
+            <div id="smoother" title="Smoothing"></div>
+            <div id="legend"></div>
+          </div>
+          <div id="slider"></div>
+      </div>
+
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Xively-rickshaw maintained by <a href="https://github.com/jasonneylon">jasonneylon</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+<script>
+
+// Set your API key first  
+xively.setKey( "QjgNPVyfrL8mq0ulvTk69cfkY0RPTVE8SWEA6Jr7SnjdfOBY" );  
+
+var startOfYesterday = moment().subtract("day", 90).startOf('day');
+var endOfYesterday = moment().subtract("hour", 3).startOf('day');
+
+console.log(startOfYesterday);
+console.log(endOfYesterday);
+
+var query = { 
+  start: startOfYesterday.toJSON(), 
+  end: endOfYesterday.toJSON(), 
+  interval: 60 * 60 * 24, 
+  limit: 1000,
+};
+
+xively.datastream.history( "62472", "total-generated", query, loadData);  
+
+function loadData(data) {  
+  var unit = data.unit.label;
+  var series = [];
+  var filtedData = data.datapoints;
+  for (var i=0; i < filtedData.length; i++ ) {
+    var date = moment(filtedData[i].at);
+    var value = parseInt(filtedData[i].value);
+    series[i] = {x: date.unix(), y: value};
+  }
+  drawGraph(series, unit);
+}
+
+function drawGraph(data, unit) {
+  var graph = new Rickshaw.Graph( {
+    element: document.querySelector("#chart"),
+    width: 640,
+    height: 400,
+    renderer: 'bar',
+    series: [
+      {
+        data: data,
+        color: '#6060c0',
+        name: unit
+      }
+    ]
+  } );
+  graph.render();
+
+  var hoverDetail = new Rickshaw.Graph.HoverDetail( {
+    graph: graph
+  } );
+
+  var legend = new Rickshaw.Graph.Legend( {
+    graph: graph,
+    element: document.getElementById('legend')
+  } );
+
+  var shelving = new Rickshaw.Graph.Behavior.Series.Toggle( {
+    graph: graph,
+    legend: legend
+  } );
+
+
+  var axes = new Rickshaw.Graph.Axis.Time( {
+    graph: graph
+  });
+  axes.render();
+  
+  var yAxis = new Rickshaw.Graph.Axis.Y({
+      graph: graph
+  });
+
+  yAxis.render();
+}
+</script>
+
+
+</body>
+</body>
