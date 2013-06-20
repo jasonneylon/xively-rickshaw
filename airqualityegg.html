@@ -80,7 +80,7 @@ xively.datastream.history( "106267", "NO2_00-04-a3-37-cc-cb_0", query, loadData)
 function loadData(data) {  
   var unit = data.unit.label;
   var series = [];
-  var filtedData = data.datapoints.filter(function(x) { return (x.value < 1000); });
+  var filtedData = data.datapoints.filter(function(x) { return (x.value < 100000); });
   for (var i=0; i < filtedData.length; i++ ) {
     var date = moment(filtedData[i].at);
     var value = parseInt(filtedData[i].value);
